@@ -194,6 +194,7 @@ const harmCategory = [
   "HARM_CATEGORY_SEXUALLY_EXPLICIT",
   "HARM_CATEGORY_DANGEROUS_CONTENT",
   "HARM_CATEGORY_HARASSMENT",
+  "HARM_CATEGORY_CIVIC_INTEGRITY",
 ];
 const safetySettings = harmCategory.map(category => ({
   category,
