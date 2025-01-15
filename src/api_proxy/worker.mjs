@@ -207,10 +207,11 @@ const harmCategory = [
 ];
 
 const getSafetySettings = (model) => {
-  const threshold = model.startsWith('gemini-2.0') ? 'OFF' : 'BLOCK_NONE';
+  const threshold = model.startsWith('2.0') ? 'OFF' : 'BLOCK_NONE';
+  let threshold = model?.includes('2.0') ? 'OFF' : 'BLOCK_NONE';
   return harmCategory.map(category => ({
     category,
-    threshold
+    threshold: category === "HARM_CATEGORY_CIVIC_INTEGRITY" ? "BLOCK_ONLY_HIGH" : threshold
   }));
 };
 
