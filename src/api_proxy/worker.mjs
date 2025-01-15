@@ -205,10 +205,15 @@ const harmCategory = [
   "HARM_CATEGORY_HARASSMENT",
   "HARM_CATEGORY_CIVIC_INTEGRITY",
 ];
-const safetySettings = harmCategory.map(category => ({
-  category,
-  threshold: category === "HARM_CATEGORY_CIVIC_INTEGRITY" ? "BLOCK_NONE" : "OFF"
-}));
+
+const getSafetySettings = (model) => {
+  const threshold = model.startsWith('gemini-2.0') ? 'OFF' : 'BLOCK_NONE';
+  return harmCategory.map(category => ({
+    category,
+    threshold
+  }));
+};
+
 const fieldsMap = {
   stop: "stopSequences",
   n: "candidateCount", // not for streaming
@@ -337,11 +342,14 @@ const transformMessages = async (messages) => {
   return { system_instruction, contents };
 };
 
-const transformRequest = async (req) => ({
-  ...await transformMessages(req.messages),
-  safetySettings,
-  generationConfig: transformConfig(req),
-});
+const transformRequest = async (req) => {
+  const model = req.model || DEFAULT_MODEL;
+  return {
+    ...await transformMessages(req.messages),
+    safetySettings: getSafetySettings(model),
+    generationConfig: transformConfig(req),
+  }
+};
 
 const generateChatcmplId = () => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
